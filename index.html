@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CarServ - Professional Wizard</title>
+    <title>CarServ - Professional Wizard with Billing</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet"> 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -30,8 +30,16 @@
         .btn-secondary { background: var(--secondary); border: none; padding: 12px 30px; color: white; }
         
         .icon-header { font-size: 40px; color: var(--primary); margin-bottom: 15px; }
-        label { font-weight: 500; margin-bottom: 5px; color: #555; }
-        .form-control { border-radius: 8px; padding: 12px; border: 1px solid #ddd; }
+        
+        /* Bill Styles */
+        .bill-container { border: 2px dashed #ccc; padding: 20px; background: #fff; color: #000; }
+        .bill-header { border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        
+        @media print {
+            body * { visibility: hidden; }
+            #billSection, #billSection * { visibility: visible; }
+            #billSection { position: absolute; left: 0; top: 0; width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -41,9 +49,9 @@
             <h1 class="display-3 text-white mb-4">CarServ Portal</h1>
             <div class="row justify-content-center">
                 <div class="col-md-5 bg-white p-5 rounded shadow">
-                    <h4 class="text-dark mb-4">Vehicle Authentication</h4>
-                    <input type="text" id="vID" class="form-control mb-3 text-center fw-bold" placeholder="Enter Vehicle No (e.g. WP-ABC-1234)">
-                    <button onclick="startWizard()" class="btn btn-primary w-100 py-3">START SERVICE WIZARD</button>
+                    <h4 class="text-dark mb-4">Enter Vehicle No</h4>
+                    <input type="text" id="vID" class="form-control mb-3 text-center fw-bold" placeholder="WP-ABC-1234">
+                    <button onclick="startWizard()" class="btn btn-primary w-100 py-3">START PROCESS</button>
                 </div>
             </div>
         </div>
@@ -52,89 +60,96 @@
     <div id="appContainer" class="container py-5" style="display:none;">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="text-center mb-4">
-                    <h2 class="fw-bold">Service Process</h2>
-                    <p class="text-muted">Vehicle Number: <span id="vDisplay" class="text-danger fw-bold"></span></p>
-                </div>
-
                 <div class="progress mb-5">
                     <div id="progressBar" class="progress-bar" style="width: 16%;"></div>
                 </div>
 
                 <div id="step1" class="step-card active-step">
                     <div class="icon-header"><i class="fa fa-car"></i></div>
-                    <h3>Step 1: Vehicle Details</h3>
+                    <h3>Vehicle Details</h3>
                     <div class="row g-3 mt-2">
                         <div class="col-md-6"><label>Owner Name</label><input type="text" id="owner" class="form-control"></div>
-                        <div class="col-md-6"><label>Vehicle Model</label><input type="text" id="model" class="form-control" placeholder="Toyota Vitz"></div>
+                        <div class="col-md-6"><label>Vehicle Model</label><input type="text" id="model" class="form-control"></div>
                     </div>
-                    <button class="btn btn-primary mt-4" onclick="nextStep(2)">NEXT <i class="fa fa-chevron-right ms-2"></i></button>
+                    <button class="btn btn-primary mt-4" onclick="nextStep(2)">NEXT</button>
                 </div>
 
                 <div id="step2" class="step-card">
                     <div class="icon-header"><i class="fa fa-calendar-alt"></i></div>
-                    <h3>Step 2: Service Date</h3>
-                    <div class="mt-3"><label>Preferred Appointment</label><input type="date" id="sDate" class="form-control"></div>
-                    <div class="mt-4">
-                        <button class="btn btn-secondary me-2" onclick="prevStep(1)">Back</button>
-                        <button class="btn btn-primary" onclick="nextStep(3)">NEXT</button>
-                    </div>
+                    <h3>Service Appointment</h3>
+                    <input type="date" id="sDate" class="form-control mt-3">
+                    <button class="btn btn-secondary mt-4 me-2" onclick="prevStep(1)">Back</button>
+                    <button class="btn btn-primary mt-4" onclick="nextStep(3)">NEXT</button>
                 </div>
 
                 <div id="step3" class="step-card">
                     <div class="icon-header"><i class="fa fa-tools"></i></div>
-                    <h3>Step 3: Maintenance History</h3>
-                    <div class="mt-3"><label>Any previous issues?</label><textarea id="history" class="form-control" rows="4"></textarea></div>
-                    <div class="mt-4">
-                        <button class="btn btn-secondary me-2" onclick="prevStep(2)">Back</button>
-                        <button class="btn btn-primary" onclick="nextStep(4)">NEXT</button>
-                    </div>
+                    <h3>Select Service Type</h3>
+                    <select id="sType" class="form-select mt-3 p-3">
+                        <option value="5000">Full Service (Rs. 5000)</option>
+                        <option value="2500">Oil Change (Rs. 2500)</option>
+                        <option value="1500">Brake Check (Rs. 1500)</option>
+                    </select>
+                    <button class="btn btn-secondary mt-4 me-2" onclick="prevStep(2)">Back</button>
+                    <button class="btn btn-primary mt-4" onclick="nextStep(4)">NEXT</button>
                 </div>
 
                 <div id="step4" class="step-card">
-                    <div class="icon-header"><i class="fa fa-bell"></i></div>
-                    <h3>Step 4: Reminders</h3>
-                    <div class="form-check form-switch p-3 bg-light rounded mt-3">
-                        <input class="form-check-input" type="checkbox" id="remind">
-                        <label class="form-check-label ms-2">Enable SMS Service Alerts</label>
-                    </div>
-                    <div class="mt-4">
-                        <button class="btn btn-secondary me-2" onclick="prevStep(3)">Back</button>
-                        <button class="btn btn-primary" onclick="nextStep(5)">NEXT</button>
-                    </div>
+                    <div class="icon-header"><i class="fa fa-user-cog"></i></div>
+                    <h3>Assigned Mechanic</h3>
+                    <select id="mechanic" class="form-select mt-3 p-3">
+                        <option>Sunil - Senior Tech</option>
+                        <option>Kamal - Specialist</option>
+                    </select>
+                    <button class="btn btn-secondary mt-4 me-2" onclick="prevStep(3)">Back</button>
+                    <button class="btn btn-primary mt-4" onclick="nextStep(5)">NEXT</button>
                 </div>
 
                 <div id="step5" class="step-card">
-                    <div class="icon-header"><i class="fa fa-id-badge"></i></div>
-                    <h3>Step 5: Mechanic</h3>
-                    <div class="mt-3">
-                        <label>Select Specialist</label>
-                        <select id="mechanic" class="form-select form-control">
-                            <option>Sunil - Senior Tech</option>
-                            <option>Kamal - Engine Specialist</option>
-                        </select>
-                    </div>
-                    <div class="mt-4">
-                        <button class="btn btn-secondary me-2" onclick="prevStep(4)">Back</button>
-                        <button class="btn btn-primary" onclick="nextStep(6)">NEXT</button>
-                    </div>
-                </div>
-
-                <div id="step6" class="step-card">
                     <div class="icon-header"><i class="fa fa-check-circle"></i></div>
-                    <h3>Step 6: Complete</h3>
-                    <p class="text-muted">Confirm all details are correct before saving.</p>
-                    <div class="mt-4">
-                        <button class="btn btn-secondary me-2" onclick="prevStep(5)">Back</button>
-                        <button class="btn btn-success px-5 fw-bold" onclick="finish()">SAVE ALL RECORDS</button>
+                    <h3>Final Review</h3>
+                    <p>Ready to generate the bill for vehicle <span id="reviewID"></span>?</p>
+                    <button class="btn btn-secondary mt-4 me-2" onclick="prevStep(4)">Back</button>
+                    <button class="btn btn-success mt-4 px-5 fw-bold" onclick="finish()">GENERATE BILL</button>
+                </div>
+
+                <div id="billSection" class="step-card">
+                    <div class="bill-container">
+                        <div class="bill-header text-center">
+                            <h2 class="text-danger fw-bold">CARSERV INVOICE</h2>
+                            <p>Premium Vehicle Maintenance</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <p><strong>Vehicle No:</strong> <span id="bID"></span></p>
+                                <p><strong>Owner:</strong> <span id="bOwner"></span></p>
+                            </div>
+                            <div class="col-6 text-end">
+                                <p><strong>Date:</strong> <span id="bDate"></span></p>
+                                <p><strong>Mechanic:</strong> <span id="bMech"></span></p>
+                            </div>
+                        </div>
+                        <hr>
+                        <table class="table table-borderless">
+                            <thead><tr class="border-bottom"><th>Description</th><th class="text-end">Amount</th></tr></thead>
+                            <tbody>
+                                <tr>
+                                    <td><span id="bService"></span></td>
+                                    <td class="text-end">Rs. <span id="bPrice"></span></td>
+                                </tr>
+                                <tr class="fw-bold border-top">
+                                    <td>TOTAL PAYABLE</td>
+                                    <td class="text-end text-danger">Rs. <span id="bTotal"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-4 no-print">
+                        <button class="btn btn-dark me-2" onclick="window.print()"><i class="fa fa-print me-2"></i>Print Bill</button>
+                        <button class="btn btn-primary" onclick="location.reload()">New Entry</button>
                     </div>
                 </div>
 
-                <div id="summary" class="step-card text-center">
-                    <h2 class="text-success"><i class="fa fa-thumbs-up"></i> All Done!</h2>
-                    <p id="summaryText" class="my-4 fs-5"></p>
-                    <button class="btn btn-dark" onclick="location.reload()">GO TO HOME</button>
-                </div>
             </div>
         </div>
     </div>
@@ -146,29 +161,46 @@
             if(currentV) {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
-                document.getElementById('vDisplay').innerText = currentV;
+                document.getElementById('reviewID').innerText = currentV;
                 loadExisting();
             }
         }
         function nextStep(step) {
             document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
             document.getElementById('step' + step).classList.add('active-step');
-            document.getElementById('progressBar').style.width = (step * 16.6) + "%";
-            window.scrollTo(0,0);
+            document.getElementById('progressBar').style.width = (step * 20) + "%";
         }
         function prevStep(step) { nextStep(step); }
+        
         function finish() {
+            const serviceEl = document.getElementById('sType');
             const data = {
                 owner: document.getElementById('owner').value,
                 model: document.getElementById('model').value,
                 date: document.getElementById('sDate').value,
-                notes: document.getElementById('history').value
+                service: serviceEl.options[serviceEl.selectedIndex].text,
+                price: serviceEl.value,
+                mechanic: document.getElementById('mechanic').value
             };
+
+            // Save to LocalStorage
             localStorage.setItem(currentV, JSON.stringify(data));
+
+            // Fill Bill
+            document.getElementById('bID').innerText = currentV;
+            document.getElementById('bOwner').innerText = data.owner;
+            document.getElementById('bDate').innerText = data.date;
+            document.getElementById('bMech').innerText = data.mechanic;
+            document.getElementById('bService').innerText = data.service;
+            document.getElementById('bPrice').innerText = data.price;
+            document.getElementById('bTotal').innerText = data.price;
+
+            // Show Bill Step
             document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
-            document.getElementById('summary').classList.add('active-step');
-            document.getElementById('summaryText').innerText = `Data for vehicle ${currentV} has been securely saved.`;
+            document.getElementById('billSection').classList.add('active-step');
+            document.getElementById('progressBar').style.width = "100%";
         }
+
         function loadExisting() {
             let saved = localStorage.getItem(currentV);
             if(saved) {
@@ -176,7 +208,6 @@
                 document.getElementById('owner').value = d.owner || "";
                 document.getElementById('model').value = d.model || "";
                 document.getElementById('sDate').value = d.date || "";
-                document.getElementById('history').value = d.notes || "";
             }
         }
     </script>
