@@ -27,7 +27,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-5 bg-primary p-5 rounded">
                     <h2 class="text-white mb-4">CarServ Portal</h2>
-                    <input type="text" id="vID" class="form-control mb-3 p-3" placeholder="Enter Vehicle Number">
+                    <input type="text" id="vID" class="form-control mb-3 p-3" placeholder="Enter Vehicle Number (e.g. CAS-8822)">
                     <button onclick="startWizard()" class="btn btn-dark w-100 py-3 fw-bold">LOG IN & START</button>
                 </div>
             </div>
@@ -42,17 +42,30 @@
                 </div>
 
                 <div id="step1" class="step-card active-step">
-                    <h4 class="text-primary mb-4">Step 1: Vehicle Management</h4>
-                    <div class="mb-3"><label>Owner Name</label><input type="text" id="owner" class="form-control"></div>
-                    <div class="mb-3"><label>Engine Serial</label><input type="text" id="engine" class="form-control"></div>
+                    <h4 class="text-primary mb-4">Step 1: Vehicle Details</h4>
+                    <div class="mb-3"><label class="fw-bold">Owner Name</label><input type="text" id="owner" class="form-control" placeholder="Enter owner's name"></div>
+                    <div class="mb-3"><label class="fw-bold">Vehicle Model</label><input type="text" id="model" class="form-control" placeholder="e.g. Toyota Vitz"></div>
+                    <div class="mb-3"><label class="fw-bold">Fuel Type</label>
+                        <select id="fuel" class="form-select">
+                            <option>Petrol</option>
+                            <option>Diesel</option>
+                            <option>Hybrid</option>
+                            <option>Electric</option>
+                        </select>
+                    </div>
                     <button class="btn btn-primary px-5" onclick="nextStep(2)">Next Step</button>
                 </div>
 
                 <div id="step2" class="step-card">
                     <h4 class="text-primary mb-4">Step 2: Service Scheduling</h4>
-                    <div class="mb-3"><label>Preferred Date</label><input type="date" id="sDate" class="form-control"></div>
-                    <div class="mb-3"><label>Service Type</label>
-                        <select id="sType" class="form-select"><option>Full Service</option><option>Oil Change</option></select>
+                    <div class="mb-3"><label class="fw-bold">Preferred Date</label><input type="date" id="sDate" class="form-control"></div>
+                    <div class="mb-3"><label class="fw-bold">Service Type</label>
+                        <select id="sType" class="form-select">
+                            <option>Full Service</option>
+                            <option>Oil & Filter Change</option>
+                            <option>Brake Inspection</option>
+                            <option>Engine Tune-up</option>
+                        </select>
                     </div>
                     <button class="btn btn-secondary me-2" onclick="prevStep(1)">Back</button>
                     <button class="btn btn-primary px-5" onclick="nextStep(3)">Next Step</button>
@@ -60,18 +73,18 @@
 
                 <div id="step3" class="step-card">
                     <h4 class="text-primary mb-4">Step 3: Maintenance History</h4>
-                    <p>Enter any previous repair notes:</p>
-                    <textarea id="history" class="form-control mb-3" rows="3"></textarea>
+                    <p>Enter any previous repair notes or known issues:</p>
+                    <textarea id="history" class="form-control mb-3" rows="3" placeholder="e.g. Battery replaced last month"></textarea>
                     <button class="btn btn-secondary me-2" onclick="prevStep(2)">Back</button>
                     <button class="btn btn-primary px-5" onclick="nextStep(4)">Next Step</button>
                 </div>
 
                 <div id="step4" class="step-card">
-                    <h4 class="text-primary mb-4">Step 4: Reminders</h4>
-                    <p>Would you like to receive service alerts?</p>
+                    <h4 class="text-primary mb-4">Step 4: Reminders & Alerts</h4>
+                    <p>Keep track of your next service automatically.</p>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="remind">
-                        <label class="form-check-label">Enable SMS Reminders</label>
+                        <label class="form-check-label">Enable Service Alerts via Email/SMS</label>
                     </div>
                     <button class="btn btn-secondary me-2" onclick="prevStep(3)">Back</button>
                     <button class="btn btn-primary px-5" onclick="nextStep(5)">Next Step</button>
@@ -79,27 +92,29 @@
 
                 <div id="step5" class="step-card">
                     <h4 class="text-primary mb-4">Step 5: Mechanic Selection</h4>
-                    <label>Choose a Mechanic:</label>
+                    <label class="fw-bold">Assign a Specialist:</label>
                     <select id="mechanic" class="form-select mb-3">
-                        <option>Sunil - Senior Tech</option>
+                        <option>Sunil - Senior Technician</option>
                         <option>Kamal - Engine Specialist</option>
+                        <option>Aruna - Electrical Expert</option>
                     </select>
                     <button class="btn btn-secondary me-2" onclick="prevStep(4)">Back</button>
                     <button class="btn btn-primary px-5" onclick="nextStep(6)">Next Step</button>
                 </div>
 
                 <div id="step6" class="step-card">
-                    <h4 class="text-primary mb-4">Step 6: Feedback</h4>
-                    <label>How was our service?</label>
+                    <h4 class="text-primary mb-4">Step 6: Customer Feedback</h4>
+                    <label class="fw-bold mb-2">Rate our service experience:</label>
                     <input type="range" class="form-range" min="1" max="5" id="rating">
+                    <div class="d-flex justify-content-between mb-3"><small>Poor</small><small>Excellent</small></div>
                     <button class="btn btn-secondary me-2" onclick="prevStep(5)">Back</button>
-                    <button class="btn btn-success px-5" onclick="finish()">Finish & Save</button>
+                    <button class="btn btn-success px-5" onclick="finish()">Finish & Save Records</button>
                 </div>
 
                 <div id="summary" class="step-card text-center">
-                    <h2 class="text-success mb-4"><i class="fa fa-check-circle"></i> Data Saved!</h2>
-                    <p id="summaryText"></p>
-                    <button class="btn btn-dark mt-3" onclick="location.reload()">Back to Home</button>
+                    <h2 class="text-success mb-4"><i class="fa fa-check-circle"></i> Success!</h2>
+                    <p id="summaryText" class="fs-5"></p>
+                    <button class="btn btn-dark mt-3" onclick="location.reload()">Return to Home</button>
                 </div>
             </div>
         </div>
@@ -109,11 +124,13 @@
         let currentV = "";
 
         function startWizard() {
-            currentV = document.getElementById('vID').value.toUpperCase();
+            currentV = document.getElementById('vID').value.toUpperCase().trim();
             if(currentV) {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
                 loadExisting();
+            } else {
+                alert("Please enter a vehicle number.");
             }
         }
 
@@ -121,6 +138,7 @@
             document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
             document.getElementById('step' + step).classList.add('active-step');
             document.getElementById('progressBar').style.width = (step * 16.6) + "%";
+            window.scrollTo(0,0);
         }
 
         function prevStep(step) {
@@ -130,16 +148,18 @@
         function finish() {
             const data = {
                 owner: document.getElementById('owner').value,
-                engine: document.getElementById('engine').value,
+                model: document.getElementById('model').value,
+                fuel: document.getElementById('fuel').value,
                 date: document.getElementById('sDate').value,
                 type: document.getElementById('sType').value,
-                notes: document.getElementById('history').value
+                notes: document.getElementById('history').value,
+                rating: document.getElementById('rating').value
             };
             localStorage.setItem(currentV, JSON.stringify(data));
             
             document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
             document.getElementById('summary').classList.add('active-step');
-            document.getElementById('summaryText').innerText = `Records for ${currentV} updated successfully.`;
+            document.getElementById('summaryText').innerText = `Records for vehicle ${currentV} have been updated and saved securely.`;
         }
 
         function loadExisting() {
@@ -147,9 +167,12 @@
             if(saved) {
                 let d = JSON.parse(saved);
                 document.getElementById('owner').value = d.owner || "";
-                document.getElementById('engine').value = d.engine || "";
+                document.getElementById('model').value = d.model || "";
+                document.getElementById('fuel').value = d.fuel || "Petrol";
                 document.getElementById('sDate').value = d.date || "";
                 document.getElementById('sType').value = d.type || "Full Service";
+                document.getElementById('history').value = d.notes || "";
+                document.getElementById('rating').value = d.rating || 3;
             }
         }
     </script>
