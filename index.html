@@ -2,138 +2,138 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>CarServ - Cinematic Portal</title>
+    <title>CarServ - Professional Wizard</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet"> 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #D81324; --secondary: #0B2154; }
-        body { font-family: 'Ubuntu', sans-serif; background: #0b1120; color: white; overflow-x: hidden; }
+        :root { --primary: #D81324; --secondary: #0B2154; --light: #F2F2F2; }
+        body { font-family: 'Ubuntu', sans-serif; background: var(--light); color: #333; }
         
-        /* Video Background Styling */
-        #video-bg {
-            position: fixed; right: 0; bottom: 0;
-            min-width: 100%; min-height: 100%;
-            z-index: -1; filter: brightness(40%);
-            object-fit: cover;
+        .hero { 
+            background: linear-gradient(rgba(11, 33, 84, .9), rgba(11, 33, 84, .9)), url('https://technext.github.io/car-repair/img/carousel-bg-1.jpg'); 
+            background-size: cover; height: 100vh; display: flex; align-items: center; color: white;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        .step-card { 
+            display: none; background: white; padding: 40px; border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 6px solid var(--primary);
         }
+        .active-step { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .step-card { display: none; }
-        .active-step { display: block; animation: slideUp 0.6s ease-out; }
+        .progress { height: 8px; background: #e9ecef; border-radius: 10px; }
+        .progress-bar { background: var(--primary); transition: 0.4s; }
         
-        @keyframes slideUp { 
-            from { opacity: 0; transform: translateY(30px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        .btn-primary { background: var(--primary); border: none; padding: 12px 30px; font-weight: bold; border-radius: 8px; transition: 0.3s; }
-        .btn-primary:hover { transform: scale(1.05); background: #b00f1d; }
+        .btn-primary { background: var(--primary); border: none; padding: 12px 30px; font-weight: bold; }
+        .btn-secondary { background: var(--secondary); border: none; padding: 12px 30px; color: white; }
         
-        .progress { height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-bottom: 30px; }
-        .progress-bar { background: var(--primary); transition: 0.5s; }
-
-        input, select, textarea { 
-            background: rgba(255,255,255,0.05) !important; 
-            border: 1px solid rgba(255,255,255,0.2) !important; 
-            color: white !important;
-            padding: 12px !important;
-        }
-        label { font-weight: 500; margin-bottom: 8px; color: #ccc; }
+        .icon-header { font-size: 40px; color: var(--primary); margin-bottom: 15px; }
+        label { font-weight: 500; margin-bottom: 5px; color: #555; }
+        .form-control { border-radius: 8px; padding: 12px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop id="video-bg">
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-car-engine-parts-and-mechanic-12821-large.mp4" type="video/mp4">
-    </video>
-
-    <div id="loginPage" class="container d-flex align-items: center; min-height: 100vh;">
-        <div class="row justify-content-center align-self-center w-100">
-            <div class="col-md-5 text-center">
-                <div class="glass-card">
-                    <h2 class="text-white mb-2">CARSERV</h2>
-                    <p class="text-primary fw-bold text-uppercase small mb-4">// Quality Service Portal //</p>
-                    <input type="text" id="vID" class="form-control text-center mb-4" placeholder="ENTER VEHICLE NUMBER">
-                    <button onclick="startWizard()" class="btn btn-primary w-100 py-3">LOGIN TO SYSTEM</button>
+    <div id="loginPage" class="hero text-center">
+        <div class="container">
+            <h1 class="display-3 text-white mb-4">CarServ Portal</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-5 bg-white p-5 rounded shadow">
+                    <h4 class="text-dark mb-4">Vehicle Authentication</h4>
+                    <input type="text" id="vID" class="form-control mb-3 text-center fw-bold" placeholder="Enter Vehicle No (e.g. WP-ABC-1234)">
+                    <button onclick="startWizard()" class="btn btn-primary w-100 py-3">START SERVICE WIZARD</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="appContainer" class="container py-5" style="display: none;">
-        <div class="row justify-content-center mt-5">
-            <div class="col-lg-7">
-                <div class="progress">
+    <div id="appContainer" class="container py-5" style="display:none;">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Service Process</h2>
+                    <p class="text-muted">Vehicle Number: <span id="vDisplay" class="text-danger fw-bold"></span></p>
+                </div>
+
+                <div class="progress mb-5">
                     <div id="progressBar" class="progress-bar" style="width: 16%;"></div>
                 </div>
 
-                <div class="glass-card">
-                    <div id="step1" class="step-card active-step">
-                        <h4 class="mb-4"><i class="fa fa-car me-2 text-primary"></i> Vehicle Information</h4>
-                        <div class="row g-3">
-                            <div class="col-md-6"><label>Owner Name</label><input type="text" id="owner" class="form-control"></div>
-                            <div class="col-md-6"><label>Vehicle Model</label><input type="text" id="model" class="form-control" placeholder="e.g. Toyota Vitz"></div>
-                        </div>
-                        <button class="btn btn-primary mt-4" onclick="nextStep(2)">NEXT STEP <i class="fa fa-arrow-right ms-2"></i></button>
+                <div id="step1" class="step-card active-step">
+                    <div class="icon-header"><i class="fa fa-car"></i></div>
+                    <h3>Step 1: Vehicle Details</h3>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6"><label>Owner Name</label><input type="text" id="owner" class="form-control"></div>
+                        <div class="col-md-6"><label>Vehicle Model</label><input type="text" id="model" class="form-control" placeholder="Toyota Vitz"></div>
                     </div>
+                    <button class="btn btn-primary mt-4" onclick="nextStep(2)">NEXT <i class="fa fa-chevron-right ms-2"></i></button>
+                </div>
 
-                    <div id="step2" class="step-card">
-                        <h4 class="mb-4"><i class="fa fa-calendar-alt me-2 text-primary"></i> Service Date</h4>
-                        <div class="mb-3"><label>Preferred Appointment</label><input type="date" id="sDate" class="form-control"></div>
-                        <button class="btn btn-link text-white text-decoration-none me-3" onclick="prevStep(1)">Back</button>
-                        <button class="btn btn-primary" onclick="nextStep(3)">NEXT STEP</button>
+                <div id="step2" class="step-card">
+                    <div class="icon-header"><i class="fa fa-calendar-alt"></i></div>
+                    <h3>Step 2: Service Date</h3>
+                    <div class="mt-3"><label>Preferred Appointment</label><input type="date" id="sDate" class="form-control"></div>
+                    <div class="mt-4">
+                        <button class="btn btn-secondary me-2" onclick="prevStep(1)">Back</button>
+                        <button class="btn btn-primary" onclick="nextStep(3)">NEXT</button>
                     </div>
+                </div>
 
-                    <div id="step3" class="step-card">
-                        <h4 class="mb-4"><i class="fa fa-history me-2 text-primary"></i> Maintenance History</h4>
-                        <textarea id="history" class="form-control" rows="4" placeholder="Previous repair notes..."></textarea>
-                        <button class="btn btn-link text-white text-decoration-none me-3" onclick="prevStep(2)">Back</button>
-                        <button class="btn btn-primary mt-3" onclick="nextStep(4)">NEXT STEP</button>
+                <div id="step3" class="step-card">
+                    <div class="icon-header"><i class="fa fa-tools"></i></div>
+                    <h3>Step 3: Maintenance History</h3>
+                    <div class="mt-3"><label>Any previous issues?</label><textarea id="history" class="form-control" rows="4"></textarea></div>
+                    <div class="mt-4">
+                        <button class="btn btn-secondary me-2" onclick="prevStep(2)">Back</button>
+                        <button class="btn btn-primary" onclick="nextStep(4)">NEXT</button>
                     </div>
+                </div>
 
-                    <div id="step4" class="step-card">
-                        <h4 class="mb-4"><i class="fa fa-bell me-2 text-primary"></i> Notifications</h4>
-                        <div class="form-check form-switch mb-4">
-                            <input class="form-check-input" type="checkbox" id="remind">
-                            <label class="form-check-label ms-2">Enable Maintenance Alerts</label>
-                        </div>
-                        <button class="btn btn-link text-white text-decoration-none me-3" onclick="prevStep(3)">Back</button>
-                        <button class="btn btn-primary" onclick="nextStep(5)">NEXT STEP</button>
+                <div id="step4" class="step-card">
+                    <div class="icon-header"><i class="fa fa-bell"></i></div>
+                    <h3>Step 4: Reminders</h3>
+                    <div class="form-check form-switch p-3 bg-light rounded mt-3">
+                        <input class="form-check-input" type="checkbox" id="remind">
+                        <label class="form-check-label ms-2">Enable SMS Service Alerts</label>
                     </div>
+                    <div class="mt-4">
+                        <button class="btn btn-secondary me-2" onclick="prevStep(3)">Back</button>
+                        <button class="btn btn-primary" onclick="nextStep(5)">NEXT</button>
+                    </div>
+                </div>
 
-                    <div id="step5" class="step-card">
-                        <h4 class="mb-4"><i class="fa fa-user-cog me-2 text-primary"></i> Expert Selection</h4>
-                        <select id="mechanic" class="form-select">
-                            <option>Sunil - Senior Technician</option>
+                <div id="step5" class="step-card">
+                    <div class="icon-header"><i class="fa fa-id-badge"></i></div>
+                    <h3>Step 5: Mechanic</h3>
+                    <div class="mt-3">
+                        <label>Select Specialist</label>
+                        <select id="mechanic" class="form-select form-control">
+                            <option>Sunil - Senior Tech</option>
                             <option>Kamal - Engine Specialist</option>
                         </select>
-                        <button class="btn btn-link text-white text-decoration-none me-3" onclick="prevStep(4)">Back</button>
-                        <button class="btn btn-primary mt-3" onclick="nextStep(6)">NEXT STEP</button>
                     </div>
+                    <div class="mt-4">
+                        <button class="btn btn-secondary me-2" onclick="prevStep(4)">Back</button>
+                        <button class="btn btn-primary" onclick="nextStep(6)">NEXT</button>
+                    </div>
+                </div>
 
-                    <div id="step6" class="step-card">
-                        <h4 class="mb-4"><i class="fa fa-check-circle me-2 text-primary"></i> Finalize</h4>
-                        <p>All data has been verified. Ready to save?</p>
-                        <button class="btn btn-link text-white text-decoration-none me-3" onclick="prevStep(5)">Back</button>
-                        <button class="btn btn-success fw-bold px-5" onclick="finish()">SAVE TO CLOUD</button>
+                <div id="step6" class="step-card">
+                    <div class="icon-header"><i class="fa fa-check-circle"></i></div>
+                    <h3>Step 6: Complete</h3>
+                    <p class="text-muted">Confirm all details are correct before saving.</p>
+                    <div class="mt-4">
+                        <button class="btn btn-secondary me-2" onclick="prevStep(5)">Back</button>
+                        <button class="btn btn-success px-5 fw-bold" onclick="finish()">SAVE ALL RECORDS</button>
                     </div>
+                </div>
 
-                    <div id="summary" class="step-card text-center py-4">
-                        <i class="fa fa-check-circle text-success mb-3" style="font-size: 60px;"></i>
-                        <h3>Success!</h3>
-                        <p id="summaryText" class="text-light mb-4"></p>
-                        <button class="btn btn-primary" onclick="location.reload()">FINISH</button>
-                    </div>
+                <div id="summary" class="step-card text-center">
+                    <h2 class="text-success"><i class="fa fa-thumbs-up"></i> All Done!</h2>
+                    <p id="summaryText" class="my-4 fs-5"></p>
+                    <button class="btn btn-dark" onclick="location.reload()">GO TO HOME</button>
                 </div>
             </div>
         </div>
@@ -146,6 +146,7 @@
             if(currentV) {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
+                document.getElementById('vDisplay').innerText = currentV;
                 loadExisting();
             }
         }
@@ -153,6 +154,7 @@
             document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
             document.getElementById('step' + step).classList.add('active-step');
             document.getElementById('progressBar').style.width = (step * 16.6) + "%";
+            window.scrollTo(0,0);
         }
         function prevStep(step) { nextStep(step); }
         function finish() {
@@ -165,7 +167,7 @@
             localStorage.setItem(currentV, JSON.stringify(data));
             document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active-step'));
             document.getElementById('summary').classList.add('active-step');
-            document.getElementById('summaryText').innerText = `Records for ${currentV} saved successfully.`;
+            document.getElementById('summaryText').innerText = `Data for vehicle ${currentV} has been securely saved.`;
         }
         function loadExisting() {
             let saved = localStorage.getItem(currentV);
